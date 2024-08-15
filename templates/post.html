@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ post.title }}</h2>
+<p>{{ post.content }}</p>
+
+<div>
+    {% for file in post.files.split(',') %}
+        <div style="margin-bottom: 20px;">
+            {% if file.endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')) %}
+                <img src="{{ url_for('static', filename='uploads/' ~ file) }}" alt="Image" style="max-width: 100%;">
+            {% elif file.endswith(('.mp4', '.avi', '.mov', '.wmv', '.mkv', '.webm', '.flv', '.3gp')) %}
+                <video controls style="max-width: 100%;">
+                    <source src="{{ url_for('static', filename='uploads/' ~ file) }}" type="video/{{ file.rsplit('.', 1)[1].lower() }}">
+                    Your browser does not support the video tag.
+                </video>
+            {% elif file.endswith(('.mp3', '.wav', '.ogg', '.aac', '.flac')) %}
+                <audio controls>
+                    <source src="{{ url_for('static', filename='uploads/' ~ file) }}" type="audio/{{ file.rsplit('.', 1)[1].lower() }}">
+                    Your browser does not support the audio tag.
+                </audio>
+            {% elif file.endswith('.pdf') %}
+                <iframe src="{{ url_for('static', filename='uploads/' ~ file) }}" style="width: 100%; height: 500px;"></iframe>
+            {% elif file.endswith(('.doc', '.docx')) %}
+                <a href="{{ url_for('static', filename='uploads/' ~ file) }}" target="_blank">{{ file }}</a>
+            {% elif file.endswith(('.xls', '.xlsx', '.csv')) %}
+                <a href="{{ url_for('static', filename='uploads/' ~ file) }}" target="_blank">{{ file }}</a>
+            {% elif file.endswith(('.ppt', '.pptx')) %}
+                <a href="{{ url_for('static', filename='uploads/' ~ file) }}" target="_blank">{{ file }}</a>
+            {% else %}
+                <a href="{{ url_for('static', filename='uploads/' ~ file) }}">{{ file }}</a>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
