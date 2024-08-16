@@ -2,10 +2,10 @@
 {% block content %}
 <h2>Login</h2>
 <form action="{{ url_for('login') }}" method="post">
-    <label for="username">Username:</label>
+    <label for="username" id="username_string">Username:</label>
     <input type="text" id="username" name="username" required>
-    <label for="password">Password:</label>
+    <label for="password" id="password_string">Password:</label>
     <input type="password" id="password" name="password" required>
-    <button type="submit">Login</button>
+    <button type="submit" id="login">Login</button>
 </form>
 {% endblock %}
