@@ -1,18 +1,20 @@
 <p align="center">
-  <img src="assets/hero.svg" alt="🧪 Laboratory Research Blog & Knowledge Portal Hero Banner" width="100%" />
+  <img src="assets/hero.svg" alt="🧪 Laboratory Research Blog & Portal Hero Banner" width="100%" />
 </p>
 
-<h1 align="center">🧪 Laboratory Research Blog & Knowledge Portal</h1>
+<h1 align="center">🧪 Laboratory Research Blog & Portal</h1>
 
 <p align="center">
-  <strong>Full-featured scientific laboratory portal, research blog, and member management system built with Flask and SQLAlchemy.</strong>
+  <strong>Full-Stack Scientific Laboratory Knowledge Portal & Research Blog Built with Flask & SQLAlchemy.</strong>
 </p>
 
 <p align="center">
+  <a href="#-overview">Overview</a> •
   <a href="#-features">Features</a> •
-  <a href="#-architecture">Architecture</a> •
-  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-code-architecture">Code Architecture</a> •
+  <a href="#-system-flow">System Flow</a> •
   <a href="#-project-structure">Structure</a> •
+  <a href="#-quick-start">Quick Start</a> •
   <a href="#-license">License</a>
 </p>
 
@@ -22,31 +24,50 @@
 
 ---
 
+## 📌 Overview
+
+A full-featured Flask web application serving as an academic laboratory portal and scientific research blog. Provides secure user authentication, role-based member management, rich article publishing with image uploads, author-specific profile pages, and administrative dashboard management.
+
+---
+
 ## ✨ Features (Key Outcomes & Capabilities)
 
 | Icon | Feature | Outcome & Real Proof |
 | :---: | :--- | :--- |
-| 📝 | **Research Article Publishing** | Rich Markdown scientific publishing with code syntax highlighting and math support |
-| 👥 | **Lab Member Directory** | Manage professor, researcher, and student profiles, alumni histories, and publications |
-| 🔒 | **Role-Based Authentication** | Secure session authentication, password hashing, and administrative dashboard |
-| 🗄️ | **Lightweight SQLite / SQLAlchemy** | Zero-setup relational database architecture with automated migration scripts |
+| 📝 | **Research Article Publishing** | Create, edit, and delete research posts with image attachments |
+| 🔐 | **Secure User Authentication** | Password hashing via Werkzeug with session protection |
+| 👥 | **Member & Author Portals** | Author-specific article listings (`/user/<username>`) and member profiles |
+| 📊 | **Lab Management Dashboard** | Centralized administrative overview for all laboratory posts |
 
 ---
 
-## 📊 Architecture & Flow
+## 🔬 Code Architecture & Implementation
+
+### 🔬 Code Implementation (`app.py`)
+- **Database Models (`SQLAlchemy`)**:
+  - `User`: `id`, `username`, `password_hash` (Werkzeug secure hashing), `role` (Admin/Member).
+  - `Post`: `id`, `title`, `content`, `image_filename`, `created_at`, `user_id` (foreign key).
+- **Authentication & Security**: Session management with `os.urandom(24)` secret key, password hashing via `generate_password_hash` / `check_password_hash`, and secure filename sanitization (`secure_filename`).
+- **File Upload Engine**: Image uploads restricted to `ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}` and served via `static/uploads/`.
+- **Templates**: Jinja2 inheritance with `base.html`, `dashboard.html`, `post.html`, and `user_posts.html`.
+
+---
+
+## 📊 System Flow
 
 ```mermaid
 graph TD
-  User([👤 Member / Visitor]) --> Router[🚪 Flask Application Router]
-  Router --> Auth[🔐 Authentication & Session Manager]
-  Router --> Blog[📝 Research Post Engine]
-  Router --> Members[👥 Member Directory Service]
-  Auth & Blog & Members --> DB[(🗄️ SQLite / SQLAlchemy Database)]
-  
+  Visitor([👤 Visitor / Member]) --> Routes[🚪 Flask App Router]
+  Routes --> Auth[🔐 Auth: Login / Register / Sessions]
+  Routes --> Posts[📝 Post Management: CRUD & Uploads]
+  Routes --> UserPage[👥 Author Profiles: /user/username]
+  Auth & Posts --> DB[(🗄️ SQLite blog.db via SQLAlchemy)]
+  Posts --> Storage[(📁 static/uploads/ Images)]
+
   classDef primary fill:#06b6d4,stroke:#0891b2,stroke-width:2px,color:#fff;
   classDef accent fill:#8b5cf6,stroke:#7c3aed,stroke-width:2px,color:#fff;
-  class Router,Auth primary;
-  class Blog,Members,DB accent;
+  class Routes,Auth primary;
+  class DB,Storage accent;
 ```
 
 ---
@@ -55,19 +76,19 @@ graph TD
 
 ```bash
 laboratory-blog-flask/
-├── 📁 templates/              # Jinja2 HTML templates
-├── 📁 static/                 # CSS stylesheets & scripts
-├── 📄 app.py                  # Flask application entry point
-├── 📄 requirements.txt        # Python dependencies
+├── 📁 assets/                 # High-resolution SVG banners
+│   └── 🎨 hero.svg
+├── 📁 templates/              # Jinja2 templates (base, dashboard, post, user_posts)
+├── 📁 static/                 # CSS stylesheets, JS scripts & uploads
+├── 📄 app.py                  # Flask routes, SQLAlchemy models & auth logic
+├── 📄 reset_database.py       # Database initialization & reset utility
+├── 📄 requirements.txt        # Flask, Flask-SQLAlchemy, Werkzeug
 └── 📄 README.md               # Documentation
 ```
 
 ---
 
 ## 🚀 Quick Start
-
-### Prerequisites
-- Check language runtimes (Python / Node.js) and system dependencies.
 
 ```bash
 # 1. Clone repository
@@ -77,19 +98,15 @@ cd Laboratory-blog-flask
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Launch application
+# 3. Initialize database
+python reset_database.py
+
+# 4. Launch application (http://127.0.0.1:5000)
 python app.py
 ```
 
 ---
 
-## 💡 Usage Notes & Tips
-
-> [!TIP]
-> Ensure all required environment variables and dependencies are properly configured before execution.
-
----
-
 <p align="center">
-  Released under the <a href="LICENSE">MIT License</a>. Made with ❤️ by <a href="https://github.com/LoNebula">LoNebula</a>
+  Released under the <a href="LICENSE">MIT License</a>. Crafted with precision by <a href="https://github.com/LoNebula">LoNebula</a>
 </p>
